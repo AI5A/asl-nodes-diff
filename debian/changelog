@@ -1,3 +1,9 @@
+asl-update-node-list (2.0.0-beta.5-2) unstable; urgency=medium
+
+  * Rebuild for bullseye and buster
+
+ -- Rick Elrod <me@ai5a.net>  Sun, 11 Sep 2022 02:56:53 -0500
+
 asl-update-node-list (2.0.0-beta.5-1) unstable; urgency=medium
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
