@@ -1,0 +1,48 @@
+---
+name: build asl-update-node-list
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: armv7l
+            cpu: cortex-a7
+            base_image: raspios_lite:latest
+            codename: bullseye
+          - arch: armv7l
+            cpu: cortex-a7
+            base_image: raspios_lite:2021-05-07
+            codename: buster
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: pguyot/arm-runner-action@v2
+        with:
+          base_image: ${{ matrix.base_image }}
+          cpu: ${{ matrix.cpu }}
+          copy_artifact_path: "*.deb;*.build;*.buildinfo;*.changes"
+          commands: |
+            apt-get update
+            apt-get install -y debhelper devscripts
+
+            cd /asl-update-node-list
+            mkdir asl-update-node-list
+            mv * .* asl-update-node-list || true
+            cd asl-update-node-list
+            debuild -b -uc -us
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: asl-update-node-list-${{ matrix.codename }}
+          path: |
+            *.deb
+            *.build
+            *.buildinfo
+            *.changes
