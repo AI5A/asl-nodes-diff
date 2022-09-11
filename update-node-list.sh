@@ -65,7 +65,7 @@ getNodes() {
     res=0
 
     while [ $res -eq 0 ]; do
-      url=http://$i.$TOPDOMAIN/$URI
+      url=https://$i.$TOPDOMAIN/$URI
 
       if [ "${last_hash}" != '' ]; then
         url+="?hash=${last_hash}"
