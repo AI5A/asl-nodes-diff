@@ -2,6 +2,7 @@
 name: build asl-update-node-list
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build:
