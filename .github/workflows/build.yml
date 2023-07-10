@@ -12,31 +12,29 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: armv7l
-            cpu: cortex-a7
-            base_image: raspios_lite:latest
-            codename: bullseye
-          - arch: armv7l
-            cpu: cortex-a7
-            base_image: raspios_lite:2021-05-07
-            codename: buster
+          - codename: bookworm
+          - codename: bullseye
+          - codename: buster
     steps:
       - uses: actions/checkout@v2
 
-      - uses: pguyot/arm-runner-action@v2
-        with:
-          base_image: ${{ matrix.base_image }}
-          cpu: ${{ matrix.cpu }}
-          copy_artifact_path: "*.deb;*.build;*.buildinfo;*.changes"
-          commands: |
-            apt-get update
-            apt-get install -y debhelper devscripts
+      - run: |
+          mkdir docker-build
+          cat <<EOF > docker-build/Dockerfile
+          FROM debian:${{ matrix.codename }}
+          RUN apt-get update && apt-get install -y debhelper devscripts
+          VOLUME /asl-update-node-list
+          WORKDIR /asl-update-node-list/asl-update-node-list
+          CMD ["debuild", "-b", "-uc", "-us"]
+          EOF
 
-            cd /asl-update-node-list
-            mkdir asl-update-node-list
-            mv * .* asl-update-node-list || true
-            cd asl-update-node-list
-            debuild -b -uc -us
+      - name: Build deb
+        run: |
+          cd docker-build
+          docker build -t asl-update-node-list .
+          docker run --rm -v $(pwd)/../../:/asl-update-node-list asl-update-node-list
+          cd ..
+          mv ../*.deb ../*.build ../*.buildinfo ../*.changes .
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
