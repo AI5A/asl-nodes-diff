@@ -8,7 +8,7 @@ Homepage: http://www.allstarlink.org
 
 Package: asl-update-node-list
 Architecture: all
-Depends: ${misc:Depends}
+Depends: wget, ${misc:Depends}
 Description: AllStarLink Differential Node List Updater
  Replaces old rc.updatenodelist to provide differential updates
  .

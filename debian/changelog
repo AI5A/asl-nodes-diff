@@ -1,3 +1,9 @@
+asl-update-node-list (2.0.0-beta.5-3) unstable; urgency=medium
+
+  * Adding missing dependency on wget
+
+ -- Rick Elrod <me@ai5a.net>  Sat, 29 Jul 2023 03:07:11 -0500
+
 asl-update-node-list (2.0.0-beta.5-2) unstable; urgency=medium
 
   * Rebuild for bullseye and buster
